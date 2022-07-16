@@ -1,0 +1,37 @@
+파티매칭_구독OTT정보 (subscribe_info)
+
+	CREATE TABLE subscribe_info (
+	    subscribe_no		VARCHAR(15) NOT NULL PRIMARY KEY
+	    ,mem_id				VARCHAR(10) NOT NULL
+	    ,party_id			INT			NOT NULL
+		 ,subscribe_start	DATETIME		NOT NULL
+	    ,subscribe_end	DATETIME		NOT NULL
+	    ,party_role		VARCHAR(12) NOT NULL CHECK(party_role IN('파티장', '파티원'))
+	    ,FOREIGN KEY(mem_id) REFERENCES member_info(mem_id) 
+	    ,FOREIGN KEY(party_id) REFERENCES party_info(party_id)    
+	);
+	
+	subscribe_no 	: 자바로 생성
+	mem_id 		 	: 세션아이디 받아서 저장
+	party_id	 	: 파티아이디
+	party_role	 	: 파티원 또는 파티장
+	subscribe_start : 등록시 현재 날짜
+	subscribe_end	: 등록시 현재 날짜 + 1달 / 추후 결제나 정산 시 해당일 기준 + 1달로 업데이트
+	
+	INSERT INTO subscribe_info(subscribe_no, mem_id, party_id, party_role, subscribe_start, subscribe_end)
+	VALUES(
+	    ?, ?, ?, ?, NOW(), DATE_ADD(NOW(),INTERVAL +1 MONTH)
+	);
+
+
+
+SELECT subscribe_no, A.mem_id, A.party_id, party_role, subscribe_start, subscribe_end, ott_name, ott_id, ott_pw, ott_price
+FROM subscribe_info A JOIN party_info B
+ON A.party_id=B.party_id
+WHERE A.mem_id=?;
+
+
+SELECT SUM(ott_price)
+FROM subscribe_info A JOIN party_info B
+ON A.party_id=B.party_id
+WHERE A.mem_id=?;	

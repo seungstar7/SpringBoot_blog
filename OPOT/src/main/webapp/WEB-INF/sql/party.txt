@@ -1,0 +1,20 @@
+CREATE TABLE party_info (
+    party_id 	INT 			NOT NULL AUTO_INCREMENT PRIMARY KEY
+    ,mem_id		VARCHAR(10) NOT NULL
+    ,ott_name	VARCHAR(20) NOT NULL
+    ,ott_price	INT 			NOT NULL
+    ,ott_id		VARCHAR(40) NOT NULL
+    ,ott_pw		VARCHAR(20) NOT NULL
+    ,ott_cdate	DATETIME 	NOT NULL
+    ,bank_name	VARCHAR(20) NOT NULL
+    ,bank_account		VARCHAR(20) NOT NULL
+    ,payback_amount	INT			
+    ,payback_result	CHAR(2)		DEFAULT 'N' NOT NULL CHECK(payback_result IN('Y', 'N'))
+    ,matching_no		TINYINT		DEFAULT 1 	NOT NULL CHECK(matching_no BETWEEN 1 AND 4)
+);
+
+
+INSERT INTO party_info(mem_id, ott_name, ott_price, ott_id, ott_pw, ott_cdate, bank_name, bank_account, payback_result, matching_no)
+VALUES(
+    'kimkim12', 'netfilx',	17000, 'netnet@gmail.com',	'skdh546', '2022-06-06', '신한', '112-2313-125121', 'Y', 4
+); 

@@ -1,0 +1,12 @@
+//대기리스트에 현재 파티장이 만든 ott를 희망하는 파티원이 있을 시 매칭시키기
+
+SELECT mem_id, ott_name, waiting_date, waiting_no
+FROM party_waiting
+WHERE waiting_no=(SELECT MIN(waiting_no) FROM party_waiting WHERE ott_name=?)
+
+
+
+
+//매칭완료시 대기리스트에서는 지운다
+DELETE FROM party_waiting
+WHERE waiting_no=13;

@@ -1,0 +1,63 @@
+--컨텐츠 시청목록----------------------------------------------------------------------------------
+
+-- 마이페이지 시청목록
+SELECT mem_id, mcode, watch_time, watch_reg
+FROM watch_list
+WHERE mem_id='dserffe55'
+
+SELECT mem_id, mcode, watch_time, watch_reg
+contlist
+WHERE mem_id=?
+
+
+-- 영화이름 출력하기 위해 조인
+SELECT mem_id, A.mcode, watch_time, watch_reg, mtitle, mthum
+FROM watch_list A JOIN contlist B
+ON A.mcode=B.mcode
+WHERE mem_id='dserffe55'
+ORDER BY watch_time DESC;
+
+
+
+
+
+--랭킹----------------------------------------------------------------------------------
+
+-- 특정 영화 시청수 조회
+SELECT COUNT(*)
+FROM watch_list
+WHERE mcode=6;
+
+
+-- 전체 영화 시청수 정렬
+SELECT mcode, COUNT(*) AS watch_cnt
+FROM watch_list
+GROUP BY mcode
+ORDER BY watch_cnt DESC;
+
+
+
+
+-- 조회수(시청목록 별 랭킹)
+SELECT mcode, watch_cnt
+FROM(
+     SELECT mcode, watch_cnt, @RNO := @RNO + 1 AS r
+     FROM(
+          SELECT mcode, COUNT(*) AS watch_cnt
+          FROM watch_list GROUP BY mcode ORDER BY watch_cnt DESC)A, (SELECT  @RNO := 0)B 
+     )C
+WHERE r>=1 AND r<=3
+
+
+
+-- 인덱스 랭킹 노출용 쿼리
+SELECT D.mcode, watch_cnt, mtitle, mthum
+FROM(SELECT mcode, watch_cnt
+		FROM(
+		     SELECT mcode, watch_cnt, @RNO := @RNO + 1 AS r
+		     FROM(
+		          SELECT mcode, COUNT(*) AS watch_cnt
+		          FROM watch_list GROUP BY mcode ORDER BY watch_cnt DESC)A, (SELECT  @RNO := 0)B 
+		     )C
+		WHERE r>=1 AND r<=3)D JOIN contlist E
+ON D.mcode=E.mcode
